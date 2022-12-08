@@ -1,9 +1,16 @@
+package site.nomoreparties.stellarburgers;
+
 import io.qameta.allure.Description;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Before;
 import org.junit.Test;
+import site.nomoreparties.stellarburgers.response.Ingredients;
+import site.nomoreparties.stellarburgers.response.Order;
+import site.nomoreparties.stellarburgers.response.UserClient;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -31,7 +38,7 @@ public class UserOrdersTest {
         ValidatableResponse orderInfo = orderClient.userOrderInfo(token);
         List<Map<String, Object>> ordersList = orderInfo.extract().path("orders");
 
-        orderInfo.assertThat().statusCode(200);
+        orderInfo.assertThat().statusCode(SC_OK);
         orderInfo.assertThat().body("success", equalTo(true));
         assertThat("Orders list empty", ordersList, is(not(0)));
     }
@@ -43,7 +50,7 @@ public class UserOrdersTest {
 
         ValidatableResponse orderInfo = orderClient.userOrderInfo(token);
 
-        orderInfo.assertThat().statusCode(401);
+        orderInfo.assertThat().statusCode(SC_UNAUTHORIZED);
         orderInfo.assertThat().body("success", equalTo(false));
         orderInfo.assertThat().body("message", equalTo("You should be authorised"));
     }

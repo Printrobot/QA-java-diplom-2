@@ -1,3 +1,5 @@
+package site.nomoreparties.stellarburgers;
+
 public class Token {
     public static String accessToken;
     public static String refreshToken;

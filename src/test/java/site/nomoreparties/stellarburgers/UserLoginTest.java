@@ -1,3 +1,5 @@
+package site.nomoreparties.stellarburgers;
+
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
@@ -5,6 +7,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import site.nomoreparties.stellarburgers.response.UserClient;
+
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -25,7 +30,7 @@ public class UserLoginTest {
     }
 
     @Test
-    @DisplayName("Check User Can Login")
+    @DisplayName("Check site.nomoreparties.stellarburgers.User Can Login")
     @Description("/auth/login :: success = true :: statusCode(200)")
     public void checkUserCanLogin(){
         userClient.create(user);
@@ -33,7 +38,7 @@ public class UserLoginTest {
         refreshToken = validatableResponse.extract().path("refreshToken");
 
         assertThat("Courier ID incorrect", refreshToken, notNullValue());
-        validatableResponse.assertThat().statusCode(200);
+        validatableResponse.assertThat().statusCode(SC_OK);
         validatableResponse.assertThat().body("success", equalTo(true));
     }
 
@@ -44,7 +49,7 @@ public class UserLoginTest {
         userClient.create(user);
         ValidatableResponse validatableResponse = userClient.login(new UserCredentials(null, user.password));
 
-        validatableResponse.assertThat().statusCode(401);
+        validatableResponse.assertThat().statusCode(SC_UNAUTHORIZED);
         validatableResponse.assertThat().body("success", equalTo(false));
         validatableResponse.assertThat().body("message", equalTo("email or password are incorrect"));
     }
@@ -54,9 +59,9 @@ public class UserLoginTest {
     @Description("/auth/login :: success = false :: message = email or password are incorrect :: statusCode(401)")
     public void checkUserLoginWithoutPassword(){
         userClient.create(user);
-        ValidatableResponse validatableResponse = userClient.login(new UserCredentials (user.email,null));
+        ValidatableResponse validatableResponse = userClient.login(new UserCredentials(user.email,null));
 
-        validatableResponse.assertThat().statusCode(401);
+        validatableResponse.assertThat().statusCode(SC_UNAUTHORIZED);
         validatableResponse.assertThat().body("message", equalTo("email or password are incorrect"));
     }
 
@@ -68,7 +73,7 @@ public class UserLoginTest {
         String randomEmail = (RandomStringUtils.randomAlphabetic(8) + "@ya.ru").toLowerCase();
         ValidatableResponse validatableResponse = userClient.login(new UserCredentials(randomEmail, user.password));
 
-        validatableResponse.assertThat().statusCode(401);
+        validatableResponse.assertThat().statusCode(SC_UNAUTHORIZED);
         validatableResponse.assertThat().body("success", equalTo(false));
         validatableResponse.assertThat().body("message", equalTo("email or password are incorrect"));
     }
@@ -81,7 +86,7 @@ public class UserLoginTest {
         String randomPassword = RandomStringUtils.randomAlphabetic(8);
         ValidatableResponse validatableResponse = userClient.login(new UserCredentials (user.email, randomPassword));
 
-        validatableResponse.assertThat().statusCode(401);
+        validatableResponse.assertThat().statusCode(SC_UNAUTHORIZED);
         validatableResponse.assertThat().body("message", equalTo("email or password are incorrect"));
     }
 }

@@ -1,11 +1,17 @@
+package site.nomoreparties.stellarburgers.response;
+
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
+import site.nomoreparties.stellarburgers.Token;
+import site.nomoreparties.stellarburgers.User;
+import site.nomoreparties.stellarburgers.UserCredentials;
+
 import static io.restassured.RestAssured.given;
 
 public class UserClient extends BaseAPI {
     private static final String ENDPOINT_USER = "auth";
 
-    @Step("User create")
+    @Step("site.nomoreparties.stellarburgers.User create")
     public ValidatableResponse create(User user) {
         return given()
                 .spec(getSpecification())
@@ -15,7 +21,7 @@ public class UserClient extends BaseAPI {
                 .then();
     }
 
-    @Step("User authorisation")
+    @Step("site.nomoreparties.stellarburgers.User authorisation")
     public ValidatableResponse login (UserCredentials credentials) {
         return given()
                 .spec(getSpecification())
@@ -26,7 +32,7 @@ public class UserClient extends BaseAPI {
                 .log().body();
     }
 
-    @Step ("User delete")
+    @Step ("site.nomoreparties.stellarburgers.User delete")
     public void delete() {
         if (Token.getAccessToken() == null) {
             return;

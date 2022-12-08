@@ -1,8 +1,12 @@
+package site.nomoreparties.stellarburgers;
+
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Before;
 import org.junit.Test;
+import site.nomoreparties.stellarburgers.response.UserClient;
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.equalTo;
 
 public class UserCredentialsTest {
@@ -26,7 +30,7 @@ public class UserCredentialsTest {
         token = login.extract().path("accessToken");
         ValidatableResponse info = userClient.userChangeInfo(token, UserCredentials.getPassword());
 
-        info.assertThat().statusCode(200);
+        info.assertThat().statusCode(SC_OK);
         info.assertThat().body("success", equalTo(true));
     }
 
@@ -39,7 +43,7 @@ public class UserCredentialsTest {
         token = login.extract().path("accessToken");
         ValidatableResponse info = userClient.userChangeInfo(token, UserCredentials.getEmail());
 
-        info.assertThat().statusCode(200);
+        info.assertThat().statusCode(SC_OK);
         info.assertThat().body("success", equalTo(true));
     }
 
@@ -50,7 +54,7 @@ public class UserCredentialsTest {
         token = "";
         ValidatableResponse info = userClient.userChangeInfo(token, UserCredentials.getPassword());
 
-        info.assertThat().statusCode(401);
+        info.assertThat().statusCode(SC_UNAUTHORIZED);
         info.assertThat().body("success", equalTo(false));
         info.assertThat().body("message", equalTo("You should be authorised"));
     }
@@ -62,7 +66,7 @@ public class UserCredentialsTest {
         token = "";
         ValidatableResponse info = userClient.userChangeInfo(token, UserCredentials.getEmail());
 
-        info.assertThat().statusCode(401);
+        info.assertThat().statusCode(SC_UNAUTHORIZED);
         info.assertThat().body("success", equalTo(false));
         info.assertThat().body("message", equalTo("You should be authorised"));
     }

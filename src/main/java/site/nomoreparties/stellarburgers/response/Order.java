@@ -1,11 +1,14 @@
+package site.nomoreparties.stellarburgers.response;
+
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
+
 import static io.restassured.RestAssured.given;
 
 public class Order extends BaseAPI {
     private static final String ENDPOINT_ORDER = "orders";
 
-    @Step("Order create")
+    @Step("response.Order create")
     public ValidatableResponse create (String token, Ingredients ingredients){
         return given()
                 .spec(getSpecification())
@@ -25,7 +28,7 @@ public class Order extends BaseAPI {
                 .then();
     }
 
-    @Step ("User list of orders")
+    @Step ("site.nomoreparties.stellarburgers.User list of orders")
     public ValidatableResponse userOrderInfo (String token){
         return given()
                 .spec(getSpecification())
